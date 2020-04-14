@@ -1,0 +1,93 @@
+---
+variable name: MJFperson_info
+use objects: True
+data:
+  - First Name: John
+    Last Name: Smith
+    Age: 40
+    Hobbies: Flying
+    Likes pets?: True
+  - First Name: Peter
+    Last Name: Smith
+    Age: 22
+    Hobbies: Being lazy
+    Likes pets?: False
+  - First Name: Wilma
+    Last Name: Flintstone
+    Age: 102
+    Hobbies: Travelling
+    Likes pets?: False
+  - First Name: Ren
+    Last Name: Mark
+    Age: 50
+    Hobbies: Mining
+    Likes pets?: True
+---
+code: |
+  MJFperson_info[i]['MJFchoices'] = []
+  for MJFkey in MJFperson_info[i]:
+    MJFperson_info[i]['MJFchoices'].append('**{}:** {}'.format(MJFkey, MJFperson_info[i][MJFkey]))
+---
+mandatory: True
+question:  Family Information Checker
+subquestion: |
+  #### Here is the information collected for each family member.
+  
+  ${ MJFquestion_table_first }
+
+  You will be asked to confirm each piece of information is correct.
+buttons:
+  - Continue: continue
+  - Exit: exit
+  - Restart: restart
+---
+mandatory: True
+question: Family information
+subquestion: |
+  #### Here is validated information collected for each family member.
+
+  Information is displayed along with which items are correct.
+  
+  ${ MJFquestion_table }
+
+buttons:
+  - Exit: exit
+  - Restart: restart
+---
+table: MJFquestion_table
+rows:  MJFperson_info
+columns:
+  - First Name: |
+      row_item['First Name']
+  - Last Name: |
+      row_item['Last Name']
+  - Age: |
+      row_item['Age']
+  - Hobbies: |
+      row_item['Hobbies']
+  - Likes Pets: |
+      row_item['Likes pets?']
+  - Correct data: |
+      row_item['MJFanswers'].true_values()
+---
+table: MJFquestion_table_first
+rows: MJFperson_info
+columns:
+  - First Name: |
+      row_item['First Name']
+  - Last Name: |
+      row_item['Last Name']
+  - Age: |
+      row_item['Age']
+  - Hobbies: |
+      row_item['Hobbies']
+  - Likes Pets: |
+      row_item['Likes pets?']
+---
+question: |
+  Is the information below correct for ${ MJFperson_info[i]['First Name'] }?
+fields:
+  - no label: MJFperson_info[i]['MJFanswers']
+    datatype: checkboxes
+    code: MJFperson_info[i]['MJFchoices']
+---
