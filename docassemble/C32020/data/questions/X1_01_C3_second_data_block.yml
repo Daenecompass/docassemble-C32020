@@ -1,0 +1,112 @@
+---
+variable name: MJFperson_info
+use objects: True
+data:
+  - First Name: John
+    Last Name: Smith
+    Age: 40
+    Hobbies: Flying
+    Likes pets?: True
+  - First Name: Peter
+    Last Name: Smith
+    Age: 22
+    Hobbies: Being lazy
+    Likes pets?: False
+  - First Name: Wilma
+    Last Name: Flintstone
+    Age: 102
+    Hobbies: Travelling
+    Likes pets?: False
+  - First Name: Ren
+    Last Name: Mark
+    Age: 50
+    Hobbies: Mining
+    Likes pets?: True
+---
+variable name: MJFquestions
+use objects: True
+data:
+  - MJFquestion: Is this information correct for John?
+    MJFchoices:
+      - First name is John
+      - Last name is Smith
+      - Age is 40
+      - Hobbies is Flying
+      - Likes pets is True
+  - MJFquestion: Is this information correct for Peter?
+    MJFchoices:
+      - First name is Peter
+      - Last name is Smith
+      - Age is 22
+      - Hobbies is being lazy
+      - Likes pets is False
+  - MJFquestion: Is this information correct for Wilma?
+    MJFchoices:
+      - First name is Wilma
+      - Last name is Flintstone
+      - Age is 102
+      - Hobbies is travelling
+      - Likes pets is False
+  - MJFquestion: Is this information correct for Ren?
+    MJFchoices:
+      - First name is Ren
+      - Last name is Mark
+      - Age is 50
+      - Hobbies is mining
+      - Likes pets is True
+---
+mandatory: True
+question:  Family Information Checker
+subquestion: |
+  #### Here is the information collected for each family member.
+  
+  ${ MJFquestion_table_first }
+
+  You will be asked to confirm each piece of information is correct.
+buttons:
+  - Continue: continue
+  - Exit: exit
+  - Restart: restart
+---
+mandatory: True
+question: Family information
+subquestion: |
+  #### Here is validated information collected for each family member.
+
+  Information is displayed along with which items are correct.
+  
+  ${ MJFquestion_table }
+
+buttons:
+  - Exit: exit
+  - Restart: restart
+---
+table: MJFquestion_table
+rows:  MJFquestions
+columns:
+  - Question: |
+      row_item['MJFquestion']
+  - Selected Answers: |
+      row_item['MJFanswers'].true_values()
+---
+table: MJFquestion_table_first
+rows: MJFperson_info
+columns:
+  - First Name: |
+      row_item['First Name']
+  - Last Name: |
+      row_item['Last Name']
+  - Age: |
+      row_item['Age']
+  - Hobbies: |
+      row_item['Hobbies']
+  - Likes Pets: |
+      row_item['Likes pets?']
+---
+question: |
+  ${ MJFquestions[i]['MJFquestion'] }
+fields:
+  - no label: MJFquestions[i]['MJFanswers']
+    datatype: checkboxes
+    code: MJFquestions[i]['MJFchoices']
+---
